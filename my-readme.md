@@ -1,8 +1,24 @@
 # 13-May-2023 
 # DevOps Tests
-
 # ORIGINAL SOURCE: https://github.com/dotnet/dotnet-docker.git
 # See Source for other Dockerfile images
+
+
+
+# Git
+.gitignore
+bin/
+obj/
+
+git init
+git commit -m 'First Local Commit'
+git status
+
+
+## remote
+git remote -v
+git remote add githubrepo https://github.com/pietronromano/aspnetapp
+git push githubrepo main
 
 # Asp.Net
 dotnet restore
