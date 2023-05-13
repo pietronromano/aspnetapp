@@ -1,7 +1,0 @@
-C:\dev\TODO\azure\containers\apps\aspnetapp\bin\Debug\net7.0\publish\aspnetapp.exe
-C:\dev\TODO\azure\containers\apps\aspnetapp\bin\Debug\net7.0\publish\appsettings.Development.json
-C:\dev\TODO\azure\containers\apps\aspnetapp\bin\Debug\net7.0\publish\appsettings.json
-C:\dev\TODO\azure\containers\apps\aspnetapp\bin\Debug\net7.0\publish\aspnetapp.dll
-C:\dev\TODO\azure\containers\apps\aspnetapp\bin\Debug\net7.0\publish\aspnetapp.deps.json
-C:\dev\TODO\azure\containers\apps\aspnetapp\bin\Debug\net7.0\publish\aspnetapp.runtimeconfig.json
-C:\dev\TODO\azure\containers\apps\aspnetapp\bin\Debug\net7.0\publish\aspnetapp.pdb
