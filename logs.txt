@@ -1,0 +1,1 @@
+{"DateAndTime":"13/05/2023 05:44:45","RuntimeVersion":".NET 7.0.5","OSVersion":"Microsoft Windows 10.0.19045","OSArchitecture":"X64","User":"pietr","ProcessorCount":20,"TotalAvailableMemoryBytes":68577005568,"MemoryLimit":0,"MemoryUsage":0}/n
