@@ -1,0 +1,51 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - prnaz400aspnetapp
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://pnracr1.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_c62507bd58a54f959946f0f533277db0 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_20494ca5121645d2aa7b9946317bc394 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: pnracr1.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_c62507bd58a54f959946f0f533277db0 }}/aspnetapp-ubuntu:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'prnaz400aspnetapp'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_2782a76ecb0a41c9ad8de8ef84940bb0 }}
+        images: 'pnracr1.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_c62507bd58a54f959946f0f533277db0 }}/aspnetapp-ubuntu:${{ github.sha }}'
