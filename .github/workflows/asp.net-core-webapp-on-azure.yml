@@ -26,7 +26,7 @@ jobs:
     steps:
 
       # Checkout the repo
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
       
       # Setup .NET Core SDK
       - name: Setup .NET Core
@@ -41,6 +41,18 @@ jobs:
           dotnet build --configuration Release
           dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp' 
           
+      # Azure login
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+           # ClientId of the Azure Service principal created.
+          client-id: "d24c8a1d-a480-4420-bd81-54ba4111aba7"
+          # TenantId of the Azure Service principal created.
+          tenant-id: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+          # Azure subscriptionId
+          subscription-id: "3ea0a827-ae7e-48da-a47c-a033b20041a1"
+
       # Deploy to Azure Web apps
       - name: 'Run Azure webapp deploy action using publish profile credentials'
         uses: azure/webapps-deploy@v2
