@@ -4,7 +4,6 @@
 # See Source for other Dockerfile images
 
 
-
 # Git
 .gitignore
 bin/
