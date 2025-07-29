@@ -1,5 +1,21 @@
 # 27-July-2025
-# Deploy to IIS:
+
+# DEPLOY ON KESTREL
+## WORKED OK! 
+## BUT NEED TO EXPOSE Private Machine IP, NOT localhost (that's a looback adapter )
+appsettings.json
+"Kestrel": {
+    "Endpoints": {
+      "MyHttpEndpoint": {
+        "Url": "http://10.0.2.4:8080"
+      }
+    }
+  }
+
+
+
+# DIDN'T WORK! GOT aspnet errors is IIS
+## Deploy to IIS:
  - Add Web Server role to Windows
  - Add .net bundle: https://learn.microsoft.com/en-us/aspnet/core/tutorials/publish-to-iis?view=aspnetcore-9.0&tabs=visual-studio
 
