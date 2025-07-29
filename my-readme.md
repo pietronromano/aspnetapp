@@ -1,3 +1,18 @@
+# 27-July-2025
+# Deploy to IIS:
+ - Add Web Server role to Windows
+ - Add .net bundle: https://learn.microsoft.com/en-us/aspnet/core/tutorials/publish-to-iis?view=aspnetcore-9.0&tabs=visual-studio
+
+ - net stop was /y 
+ - net start w3svc
+
+# Publish the app
+ - dotnet publish
+
+ →  bin\Release\net9.0\publish\
+
+
+--------------------
 # 13-May-2023 
 # DevOps Tests
 # ORIGINAL SOURCE: https://github.com/dotnet/dotnet-docker.git
