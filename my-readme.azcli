@@ -1,0 +1,144 @@
+# 22-April-2025 
+- Updated to .Net 9.0
+- DIDN'T WORK:
+  - Dockerfile.ubuntu-x64: update to 9.0-noble, SEE https://hub.docker.com/_/microsoft-dotnet
+  - docker build docker build --platform linux/x86_64 ... : force emulation when building on Mac
+
+- Docker calls
+  - docker build --platform linux/x86_64 -t aspnetapp -f Dockerfile .
+  - docker container run  --name aspnetapp -it -p 8080:8080 aspnetapp
+
+- Container Apps:
+ - DIDN'T WORK!: Dockerfiled-old  Container crashing: tried exposing 443 in dockerfile but didn't work: problem seems to come from having https in launchSettings.json
+ - WORKED! 
+    - Dockerfile: from https://github.com/Azure-Samples/containerapps-albumapi-csharp/blob/main/src/Dockerfile
+    - launchSettings.json:
+    "profiles": {
+    "aspnetapp": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:8080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+
+ - Web App Containers:
+    - OK! Worked fine
+
+  # Azure Container Registry
+- Create 
+- Access Keys: enable Admin user
+
+# CLI Comands
+az login --tenant  pluxeegroup.onmicrosoft.com
+az account set -s plx-ccoe-sbx-glb. [139]
+
+acr=plxccoepnraca
+app=aspnetapp
+tag=v1
+docker tag $app $acr.azurecr.io/$app:$tag
+
+az acr login -n $acr
+docker push $acr.azurecr.io/$app:$tag
+az acr repository list -n $acr 
+
+# Create the ACA app
+ - TargetPort must be 8080
+ 
+curl https://plx-ca-ccoe-pnr-aspnetapp.politesand-eb338679.northeurope.azurecontainerapps.io
+
+
+-----------------------------------------------------------
+# 13-May-2023 
+# DevOps Tests
+# ORIGINAL SOURCE: https://github.com/dotnet/dotnet-docker.git
+# See Source for other Dockerfile images
+
+
+# Git
+.gitignore
+bin/
+obj/
+
+git init
+git commit -m 'First Local Commit'
+git status
+
+
+## remote
+git remote -v
+git remote add githubrepo https://github.com/pietronromano/aspnetapp
+git push githubrepo main
+
+# Asp.Net
+dotnet restore
+dotnet build
+## Creates folder bin/publish
+dotnet publish
+
+## Run on http://localhost:5011
+dotnet run
+## Environment variables
+http://localhost:5011/Environment
+## Health Check
+http://localhost:5011/healthz
+
+
+# Docker #####################################
+--------------------------------------------------------------
+# DEBUG
+## BEST WAY IS TO Initialize Docker from VS Code: Creates Dockerfile that can be Debugged in the container
+## VS Code - > Run -> Add Configuration -> "Add Docker Files to Workspace"
+## Build
+docker build -t aspnetapp-win -f Dockerfile .
+## Run
+docker container run  --name aspnetapp -it -p 8000:5011 aspnetapp-win
+http://localhost/8000
+
+# Debug -> "Docker .NET Launch"
+F5
+http://localhost:32768
+
+# Build for ubuntu
+docker build --platform linux/x86_64 --pull -t aspnetapp-ubuntu -f Dockerfile.ubuntu-x64 .
+
+# Run
+docker container run  --name aspnetapp -it -p 8000:80 aspnetapp
+
+# Run bash: NOTE: that curl isn't installed on linux by default
+docker exec -it aspnetapp bash
+# curl http://localhost:8000/Environment
+
+# Azure Container Registry
+- Create 
+- enable Admin user
+
+acr=plxccoepnraca
+app=aspnetapp
+tag=v3
+docker tag $app $acr.azurecr.io/$app:$tag
+
+az login --tenant  pluxeegroup.onmicrosoft.com
+az acr login -n $acr
+docker push $acr.azurecr.io/$app:$tag
+
+
+
+# --------------------------------------------------------------------
+# BINDS
+## DID WORK ON LINUX!
+
+## DIDN'T WORK ON WINDOWS!!: Didn't do anything - container wasn't watching host folder
+docker container run  --name aspnetapp -it -p 8000:80 -v $(pwd):/app  aspnetapp
+
+# VS Code Git Bash didn't work, nor did it from WSL or Terminal
+## DIDN'T WORK: /w argument caused this error:
+## docker: Error response from daemon: the working directory 'C:/Program Files/Git/app' is invalid, it needs to be an absolute path.
+docker container run  --name aspnetapp -it -p 8000:80 -v $(pwd):/app -w "/app" aspnetapp
+
+## DIDN'T WORK: https://docs.docker.com/get-started/06_bind_mounts/
+## ERROR: Error response from daemon: failed to create shim task: OCI runtime create failed:
+docker container run  --name aspnetapp -it -p 8000:80 --mount src="$(pwd)", target=app aspnetapp bash
+
